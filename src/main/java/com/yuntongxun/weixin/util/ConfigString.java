@@ -12,6 +12,14 @@ import java.util.Map;
 @Data
 public abstract class ConfigString {
 //    String baseUrl = "http://111.231.58.23";
+    public static String CHARSET = "UTF-8";
+
+    public static Map<String, String> workUsers = new HashMap();
+    static {
+        workUsers.put("liugang", "刘刚");
+        workUsers.put("zhangsan", "张三");
+        workUsers.put("caizhiming", "蔡志明");
+    }
 
     public static Map<String, String> appSecret = new HashMap<String, String>();
 
@@ -34,7 +42,7 @@ public abstract class ConfigString {
     /**
      * EncodingAESKey用于消息体的加密，是AES密钥的Base64编码
      */
-    public static String aesKey = "bbHoe/rR2CjiqqE5bhtl6w==";
+    public static String aesKey = "yODkYTsOTqaxDQoOFrRxpu9WyptBjYwDU4YV5pHCZZQ";
 
     /**
      * 获取Token 接口

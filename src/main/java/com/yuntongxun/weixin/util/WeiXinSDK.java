@@ -23,14 +23,14 @@ public class WeiXinSDK {
 
     public static JSONObject msg(PostMsgDTO msgDTO){
         String rspBody = WeiXinHttpUtils.msg(msgDTO.getUrl(), msgDTO.getPayload());
-        log.error(rspBody);
+        log.info(rspBody);
         JSONObject jsonObject = JSONUtil.parseObj(rspBody);
         return jsonObject;
     }
 
     public static JSONObject getMsg(GetMsgDTO getMsgDTO){
         String rspBody = WeiXinHttpUtils.getMsg(getMsgDTO.getUrl());
-        log.error(rspBody);
+        log.info(rspBody);
         JSONObject jsonObject = JSONUtil.parseObj(rspBody);
         return jsonObject;
     }

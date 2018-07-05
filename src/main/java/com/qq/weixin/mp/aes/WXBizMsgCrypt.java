@@ -13,6 +13,8 @@
  */
 package com.qq.weixin.mp.aes;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Random;
@@ -21,7 +23,9 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import cn.hutool.core.util.HexUtil;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.HexDump;
 
 /**
  * 提供接收和推送给企业微信消息的加解密接口(UTF8编码的字符串).
@@ -102,7 +106,7 @@ public class WXBizMsgCrypt {
 	 * @return 加密后base64编码的字符串
 	 * @throws AesException aes加密失败
 	 */
-	String encrypt(String randomStr, String text) throws AesException {
+	public String encrypt(String randomStr, String text) throws AesException {
 		ByteGroup byteCollector = new ByteGroup();
 		byte[] randomStrBytes = randomStr.getBytes(CHARSET);
 		byte[] textBytes = text.getBytes(CHARSET);
@@ -149,7 +153,7 @@ public class WXBizMsgCrypt {
 	 * @return 解密得到的明文
 	 * @throws AesException aes解密失败
 	 */
-	String decrypt(String text) throws AesException {
+	public String decrypt(String text) throws AesException {
 		byte[] original;
 		try {
 			// 设置解密模式为AES的CBC模式
@@ -172,7 +176,8 @@ public class WXBizMsgCrypt {
 		try {
 			// 去除补位字符
 			byte[] bytes = PKCS7Encoder.decode(original);
-
+			System.out.println(new String(bytes));
+			System.out.println(HexUtil.encodeHexStr(bytes));
 			// 分离16位随机字符串,网络字节序和corpId
 			byte[] networkOrder = Arrays.copyOfRange(bytes, 16, 20);
 
@@ -192,6 +197,53 @@ public class WXBizMsgCrypt {
 		}
 		return xmlContent;
 
+	}
+
+	/**
+	 * 对密文进行解密.
+	 *
+	 * @param text 需要解密的密文
+	 * @return 解密得到的明文
+	 * @throws AesException aes解密失败
+	 */
+	public String decryptNoCorpId(String text) throws AesException {
+		byte[] original;
+		try {
+			// 设置解密模式为AES的CBC模式
+			Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+			SecretKeySpec key_spec = new SecretKeySpec(aesKey, "AES");
+			IvParameterSpec iv = new IvParameterSpec(Arrays.copyOfRange(aesKey, 0, 16));
+			cipher.init(Cipher.DECRYPT_MODE, key_spec, iv);
+
+			// 使用BASE64对密文进行解码
+			byte[] encrypted = Base64.decodeBase64(text);
+
+			// 解密
+			original = cipher.doFinal(encrypted);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AesException(AesException.DecryptAESError);
+		}
+
+		String xmlContent, from_corpid;
+		try {
+			// 去除补位字符
+			byte[] bytes = PKCS7Encoder.decode(original);
+			System.out.println(new String(bytes));
+			System.out.println(HexUtil.encodeHexStr(bytes));
+			// 分离16位随机字符串,网络字节序和corpId
+			byte[] networkOrder = Arrays.copyOfRange(bytes, 16, 20);
+
+			int xmlLength = recoverNetworkBytesOrder(networkOrder);
+
+			xmlContent = new String(Arrays.copyOfRange(bytes, 20, 20 + xmlLength), CHARSET);
+			from_corpid = new String(Arrays.copyOfRange(bytes, 20 + xmlLength, bytes.length),
+					CHARSET);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AesException(AesException.IllegalBuffer);
+		}
+		return xmlContent;
 	}
 
 	/**
