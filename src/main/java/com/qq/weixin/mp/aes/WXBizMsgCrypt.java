@@ -190,11 +190,6 @@ public class WXBizMsgCrypt {
 			e.printStackTrace();
 			throw new AesException(AesException.IllegalBuffer);
 		}
-
-		// corpid不相同的情况
-		if (!from_corpid.equals(corpId)) {
-			throw new AesException(AesException.ValidateCorpidError);
-		}
 		return xmlContent;
 
 	}

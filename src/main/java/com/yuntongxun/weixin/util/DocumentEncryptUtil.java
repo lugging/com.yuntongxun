@@ -10,6 +10,12 @@ import org.dom4j.Element;
  */
 public class DocumentEncryptUtil {
 
+    /**
+     * 获取 请求xml报文中的 Encrypt字段值
+     * @param xml
+     * @return
+     * @throws DocumentException
+     */
     public static String parsetEncryptStr(String xml) throws DocumentException {
         Document document = DocumentHelper.parseText(xml);
         Element root = document.getRootElement();
@@ -17,6 +23,13 @@ public class DocumentEncryptUtil {
         return encryptStr;
     }
 
+    /**
+     * 根据指定的Xpath获取字段值
+     * @param xml
+     * @param xpath
+     * @return
+     * @throws DocumentException
+     */
     public static String xpathEncryptStr(String xml, String xpath) throws DocumentException {
         Document document = DocumentHelper.parseText(xml);
         Element root = document.getRootElement();

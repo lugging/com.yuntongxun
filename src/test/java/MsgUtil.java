@@ -1,7 +1,10 @@
+import cn.hutool.core.util.RandomUtil;
 import com.qq.weixin.mp.aes.AesException;
+import com.qq.weixin.mp.aes.SHA1;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
 import com.yuntongxun.weixin.util.ConfigString;
 import com.yuntongxun.weixin.util.DocumentEncryptUtil;
+import com.yuntongxun.weixin.util.RspMsg;
 import com.yuntongxun.weixin.util.WeiXInEncryptUtil;
 import org.dom4j.DocumentException;
 
@@ -14,12 +17,12 @@ import java.net.URLEncoder;
 public class MsgUtil {
 
     /**
-     msg_signature 64800be58195c10c741ecdfadd4ce589984e5714,
-     timestamp 1530770469,
-     nonce 1530788570,
-     reqBody: <xml><ToUserName><![CDATA[wl361d5a0876]]></ToUserName><Encrypt><![CDATA[C2MBWYOqlJamMuUEwFyp94FuZ3bjAQWb48G9ZsSTzFBZx6a9f9H1ggN5zU7bo5qn/z7h4sErLeZNHMMhP0whoky1XBIQXmbrT48WbLL6S7iF0yR1MlafXebT2c/q1zVCHyvatgIiQIjDr6VfTPxvooDT6pLxmJ5Ff6cVXoqAOmHa8zIxS0haaScrdRPlXCsh3QX4H6BO+Arr7VMmNmNrEy7MEUfJx9CzaZcIF9zoaAm94o59L+rxiUt+y4oxCxEOaojgKDJruPfod3ntsYHDpBmqEM6UmPqTtpSC6cLstnYpaHvokR9U2y/qZQuXkcMFkHKdwJZifWR+D362KVZ16avjJ6FjXqn8MpmUY/HSSPijFeKaxdHCaQiti22EbuQtusc/Dz0KZLyndOlXajQCesnMLQELadCMhZVuh7mpBqI=]]></Encrypt><AgentID><![CDATA[1000003]]></AgentID></xml>
-
-
+     <xml>
+     <Encrypt><![CDATA[u1fkDjYXaC/eu/hE6poeZ1/2f5f5maD32S4E+KBUX5ou+j/Xulyxp5W7n57dmnO20nVoC5XPht5izVNmmbbbMGrnQ/0nNfu4z0KWWhiriqcjp/+pzmxYZdPkNe8kahsLAgz3JGbYyuPuQ+q1FuTp46ZNzBH/KBSy1ydJAW3DXSyt7pFPKE3pR4xCoGik5wcVhejMFrqCfy70G0ssJi+lqCaiSudaiqgOqh8PBxY0JEzdGxnBUDWAgw8jK+jFtuAutE3cjM/gIxieRDpAQZF0Fu3c+p6n4i8+yU+Q+BExAB2v6B242P7eLv9jSgG2b28uT4gyZmM4t49scbQkxqWG4Zq3wMyaYIuuGPaORnhFvZpOexpIVHYk56y+paDUEwZSrJtcf8rcqSTS3enDTxMcD3mYFvHvspo1fAg3LFAuBPQ=]]></Encrypt>
+     <MsgSignature><![CDATA[1c04e0c71e422c08831a252f21f2ae36e6a94d3f]]></MsgSignature>
+     <TimeStamp>1530781652230</TimeStamp>
+     <Nonce><![CDATA[z29664]]></Nonce>
+     </xml>
      * @throws AesException
      */
     public static void main(String[] args) throws AesException, DocumentException, UnsupportedEncodingException {
@@ -28,15 +31,27 @@ public class MsgUtil {
         String aesKey = "yODkYTsOTqaxDQoOFrRxpu9WyptBjYwDU4YV5pHCZZQ";
 
         WXBizMsgCrypt wxcpt = new WXBizMsgCrypt(token, aesKey, ConfigString.corpid);
-        // 解析出url上的参数值如下：
-        // String sVerifyMsgSig = HttpUtils.ParseUrl("msg_signature");
-        String sVerifyMsgSig = "64800be58195c10c741ecdfadd4ce589984e5714";
+
+        String ToUserName = "zhsngsan";
+        String FromUserName = "lisi";
+        String sReqTimeStamp = System.currentTimeMillis() + "";
+        String sReqNonce = RandomUtil.randomString(6);
+        String sRespData = RspMsg.rspMsgTextXml(ToUserName, FromUserName, sReqTimeStamp, "张三 李四 王五"); //Encrypt 响应报文
+
+        System.out.println(sRespData);
+        String rspXml = wxcpt.EncryptMsg(sRespData, sReqTimeStamp, sReqNonce);
+
+        System.out.println(rspXml);
+
+//         解析出url上的参数值如下：
+//         String sVerifyMsgSig = HttpUtils.ParseUrl("msg_signature");
+        String sVerifyMsgSig = DocumentEncryptUtil.xpathEncryptStr(rspXml, "/xml/MsgSignature");
         // String sVerifyTimeStamp = HttpUtils.ParseUrl("timestamp");
-        String sVerifyTimeStamp = "1530770469";
+        String sVerifyTimeStamp = DocumentEncryptUtil.xpathEncryptStr(rspXml, "/xml/TimeStamp");
         // String sVerifyNonce = HttpUtils.ParseUrl("nonce");
-        String sVerifyNonce = "1530788570";
-        String msg = "<xml><ToUserName><![CDATA[wl361d5a0876]]></ToUserName><Encrypt><![CDATA[C2MBWYOqlJamMuUEwFyp94FuZ3bjAQWb48G9ZsSTzFBZx6a9f9H1ggN5zU7bo5qn/z7h4sErLeZNHMMhP0whoky1XBIQXmbrT48WbLL6S7iF0yR1MlafXebT2c/q1zVCHyvatgIiQIjDr6VfTPxvooDT6pLxmJ5Ff6cVXoqAOmHa8zIxS0haaScrdRPlXCsh3QX4H6BO+Arr7VMmNmNrEy7MEUfJx9CzaZcIF9zoaAm94o59L+rxiUt+y4oxCxEOaojgKDJruPfod3ntsYHDpBmqEM6UmPqTtpSC6cLstnYpaHvokR9U2y/qZQuXkcMFkHKdwJZifWR+D362KVZ16avjJ6FjXqn8MpmUY/HSSPijFeKaxdHCaQiti22EbuQtusc/Dz0KZLyndOlXajQCesnMLQELadCMhZVuh7mpBqI=]]></Encrypt><AgentID><![CDATA[1000003]]></AgentID></xml>";
-        String encryptStr = DocumentEncryptUtil.parsetEncryptStr(msg);
+        String sVerifyNonce =  DocumentEncryptUtil.xpathEncryptStr(rspXml, "/xml/Nonce");
+
+        String encryptStr = DocumentEncryptUtil.parsetEncryptStr(rspXml);
         String result = WeiXInEncryptUtil.encrypt(token, sVerifyMsgSig, sVerifyTimeStamp, sVerifyNonce, encryptStr, wxcpt);
         System.out.println(result);
     }

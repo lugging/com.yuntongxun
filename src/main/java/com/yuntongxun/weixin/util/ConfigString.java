@@ -11,8 +11,10 @@ import java.util.Map;
  */
 @Data
 public abstract class ConfigString {
-//    String baseUrl = "http://111.231.58.23";
+
     public static String CHARSET = "UTF-8";
+
+    public static String secret = "C0q9Eici45G9kIT7uCs0msixGrDlr2LYhQi_A6T84qo";
 
     public static Map<String, String> workUsers = new HashMap();
     static {
@@ -24,25 +26,18 @@ public abstract class ConfigString {
     public static Map<String, String> appSecret = new HashMap<String, String>();
 
     static {
-        appSecret.put("1000002", "lrdRCnG_z5zpu9rl4SJ5bfTHv5wvmgWBIYnoSCrXa04");
-        appSecret.put("1000003", "Z06Nh4LDlezcV9ziynGzsSZQwQDk_wiw1lIaS33eeNI");
+        appSecret.put("1000005", "x6HrnPnxqTkYH-Etfvm61HtJr8iiEABV-t-_6vP-_N4");
+        appSecret.put("1000002", "YZmCfmbjCgtO8_4Qwp6YBGQKqdRiX9wQ4VRoEPN0uec");
+        appSecret.put("1000003", "F_E_C5FQRaa24LQu_oxNZ_KE7Vpp0x6_ipMoJJONCEI");
+        appSecret.put("1000004", "oMQGrV5txr7mpP2nuyfeTZFy7f_rAjGCPLRuT4ttjbs");
     }
 
     public static String baseUrl = "http://118.25.24.169";
 
     /**
-     * 微信请求 Token
+     * 容联考核
      */
-    public static String token = "bf8614e2fd10471fa1f6c6df061ef672";
-
-    public static String secret = "EYZeFtG-8ZKIH5KdchjeFNE5-DlvRxSzSJnean_6YwM";
-
-    public static String corpid = "wl361d5a0876";
-
-    /**
-     * EncodingAESKey用于消息体的加密，是AES密钥的Base64编码
-     */
-    public static String aesKey = "yODkYTsOTqaxDQoOFrRxpu9WyptBjYwDU4YV5pHCZZQ";
+    public static String corpid = "wlca04e718bf";
 
     /**
      * 获取Token 接口

@@ -58,7 +58,7 @@ public class MsgController {
                            @RequestParam String timestamp,
                            @RequestParam String nonce) throws IOException, AesException, DocumentException {
         String reqBody = IoUtil.read(servletRequest.getInputStream(), ConfigString.CHARSET);
-        WXBizMsgCrypt wxBizMsgCrypt = new WXBizMsgCrypt(ConfigString.token, ConfigString.aesKey, ConfigString.corpid);
+        WXBizMsgCrypt wxBizMsgCrypt = new WXBizMsgCrypt(token, aesKey, ConfigString.corpid);
         log.info("msg_signature {}, timestamp {},  nonce {}, reqBody: {} ",msg_signature, timestamp, nonce, reqBody);
 
         String encryptStr = DocumentEncryptUtil.parsetEncryptStr(reqBody);
@@ -66,22 +66,20 @@ public class MsgController {
         log.info("接收到应用消息:{}",unEncryptStr);
 
         String timeStamp = System.currentTimeMillis() + "";
-        String rspNonce = RandomUtil.randomString(6);
+        String rspNonce = RandomUtil.randomString(6).trim();
         String msgType = DocumentEncryptUtil.xpathEncryptStr(unEncryptStr, "/xml/MsgType");
         log.info("msgType : {}", msgType);
 
         String rspXml = reqBody;
         if(StringUtils.isNotEmpty(msgType) && msgType.equals("text")){ //普通文本消息
             String content = DocumentEncryptUtil.xpathEncryptStr(unEncryptStr, "/xml/Content");
-            if(content.indexOf(keyStr) > 0){
+            if(content.indexOf(keyStr) != -1){
                 log.info("查询值班人员 {}", content);
                 String users = appStr(ConfigString.workUsers);
                 String ToUserName = DocumentEncryptUtil.xpathEncryptStr(unEncryptStr, "/xml/ToUserName");
                 String FromUserName = DocumentEncryptUtil.xpathEncryptStr(unEncryptStr, "/xml/FromUserName");
                 String rspEncrypt = RspMsg.rspMsgTextXml(ToUserName, FromUserName, timeStamp, users); //Encrypt 响应报文
-                String encrypt = wxBizMsgCrypt.encrypt(rspNonce, rspEncrypt);
-                String signature = SHA1.getSHA1(token, timeStamp, rspNonce, encrypt);
-                rspXml = RspMsg.rspXml(encrypt, signature, timeStamp, rspNonce);
+                rspXml = wxBizMsgCrypt.EncryptMsg(rspEncrypt, timeStamp, rspNonce);
             } else {
                 log.info("事件消息 ...");
             }
