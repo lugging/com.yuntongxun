@@ -29,9 +29,9 @@ import java.util.Set;
 @CrossOrigin
 public class MsgController {
 
-    String token = "bf8614e2fd10471fa1f6c6df061ef672";
+    String token = "lYeRvrzIA5VpxwWhus8gopsqC";
 
-    String aesKey = "yODkYTsOTqaxDQoOFrRxpu9WyptBjYwDU4YV5pHCZZQ";
+    String aesKey = "BCrSenB9TFca36afdXscbiNUv78HFi8nAn3Euj16AVm";
 
     static String keyStr = "值班";
     /**

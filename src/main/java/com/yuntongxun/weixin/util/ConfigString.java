@@ -14,7 +14,7 @@ public abstract class ConfigString {
 
     public static String CHARSET = "UTF-8";
 
-    public static String secret = "C0q9Eici45G9kIT7uCs0msixGrDlr2LYhQi_A6T84qo";
+    public static String secret = "SD3n37NtlsZdPjdVP_7ZPNR06FaoyeHw9jnRbImj6hs";
 
     public static Map<String, String> workUsers = new HashMap();
     static {
@@ -32,12 +32,12 @@ public abstract class ConfigString {
         appSecret.put("1000004", "oMQGrV5txr7mpP2nuyfeTZFy7f_rAjGCPLRuT4ttjbs");
     }
 
-    public static String baseUrl = "http://118.25.24.169";
+    public static String baseUrl = "http://58.213.149.86";
 
     /**
      * 容联考核
      */
-    public static String corpid = "wlca04e718bf";
+    public static String corpid = "wlb633b76e17";
 
     /**
      * 获取Token 接口
