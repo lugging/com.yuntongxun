@@ -14,7 +14,7 @@ public abstract class ConfigString {
 
     public static String CHARSET = "UTF-8";
 
-    public static String secret = "SD3n37NtlsZdPjdVP_7ZPNR06FaoyeHw9jnRbImj6hs";
+    public static String secret = "SD3n37NtlsZdPjdVP_7ZPNR06FaoyeHw9jnRbImj6h";
 
     public static Map<String, String> workUsers = new HashMap();
     static {
@@ -32,7 +32,7 @@ public abstract class ConfigString {
         appSecret.put("1000004", "oMQGrV5txr7mpP2nuyfeTZFy7f_rAjGCPLRuT4ttjbs");
     }
 
-    public static String baseUrl = "http://58.213.149.86";
+    public static String baseUrl = "http://";
 
     /**
      * 容联考核

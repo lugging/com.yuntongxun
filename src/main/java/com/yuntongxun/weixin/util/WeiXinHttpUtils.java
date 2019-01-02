@@ -39,7 +39,6 @@ public class WeiXinHttpUtils {
     }
 
     /**
-     * http://118.25.24.169/cgi-bin/user/get?access_token=Zsngg2Qm8z58_fNv4r5FEPSGVouvQOtbMjwN2Q9WYl3MSNbnJ891676r4asRneXRelO7RxDbDvyxgspHX2xiptkYcqNUEu7VPf_tWZBIJY4DtaRnFaBHUYOSc5sxJmrq5Ak531lnXZ5hAGXh4gLtdSefEpIwHiZ0Vvxv9MVplfJObDC8hRaVKAIkBbujE56bhUkui-IieI5jkc3IYDd3Gw&userid=liugang&avatar_addr=1
      * @param access_token
      * @param userid
      * @param avatar_addr
